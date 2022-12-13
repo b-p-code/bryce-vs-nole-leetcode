@@ -1,8 +1,5 @@
 class Solution {
 public:
-    // Statistics are not good
-    // Speed: 32.6%
-    // Memory: 8.13%
     // Apologies Nole, I picked a compiler-specific type of problem
 
     int countValidWords(string s) {
