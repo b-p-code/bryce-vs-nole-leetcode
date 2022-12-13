@@ -1,9 +1,9 @@
 class Solution {
 public:
     int thirdMax(vector<int>& nums) {
-	// Actually quite fast
-	// Speed: 66.78%
-	// Memory: 89.30%
+		// Actually quite fast
+		// Speed: 66.78%
+		// Memory: 89.30%
         // Going for clean code
         // This sorts and then erases unique values
         sort(nums.begin(), nums.end());
