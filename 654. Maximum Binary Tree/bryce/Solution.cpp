@@ -28,9 +28,10 @@ bool operator<(const Pair&p1, const Pair& p2) {
 class Solution {
 public:
     TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
-		// Marginally better now
-		// Speed: 15.13%
-		// Memory: 8.24%
+		// massive improvement - researched iterative binary tree code
+		// Speed: 90.83%
+		// Memory: 85.46%
+		
         // THOUGHT PROCESS - we always insert the max value into the tree
         // where it is positioned within the tree is related to its index
 
@@ -51,23 +52,55 @@ public:
         return root;
     }
 
-    void insertNode(TreeNode* &node, Pair p) {
-        if (node == nullptr) {
-            node = new TreeNode(p.index);
-            return;
-        } else if (node->val < p.index) {
-            insertNode(node->right, p);
+    void insertNode(TreeNode* &root, Pair p) {
+        // Insert a node iteratively
+        // There's probably a better way to do this
+        TreeNode* node = root;
+        TreeNode* prevNode = node;
+        bool left = false;
+        bool right = false;
+
+        while (node != nullptr) {
+            if (node->val < p.index) {
+                left = false;
+                right = true;
+                prevNode = node;
+                node = node->right;
+            } else {
+                left = true;
+                right = false;
+                prevNode = node;
+                node = node->left;
+            }
+        }
+
+        if (right) {
+            prevNode->right = new TreeNode(p.index);
+        } else if (left) {
+            prevNode->left = new TreeNode(p.index);
         } else {
-            insertNode(node->left, p);
+            root = new TreeNode(p.index);
         }
     }
 
-    void replaceNodes(TreeNode* &node, vector<int> nums) {
-        if (node != nullptr) {
-            node->val = nums[node->val];
-            replaceNodes(node->left, nums);
-            replaceNodes(node->right, nums);
-            return;
-        }
+    void replaceNodes(TreeNode* root, vector<int> nums) {
+        // Traverse nodes iteratively
+        stack<TreeNode*> s;
+        TreeNode* node = root;
+        while (node != nullptr || s.size() > 0)
+        {
+            while (node != nullptr)
+            {
+                s.push(node);
+                node = node->left;
+            }
+
+            node = s.top();
+            s.pop();
+ 
+            node->val = nums[node->val];
+
+            node = node->right;
+        }
     }
 };
