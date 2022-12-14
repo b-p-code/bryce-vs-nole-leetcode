@@ -11,57 +11,51 @@
  */
 class Solution {
 public:
-    TreeNode* constructMaximumBinaryTree(vector<int> nums) {
-		// Extremely slow
-		// Speed: 5.22&
-		// Memory: 15.40%
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+		// Better solution, still slow
+		// Speed: 5.22%
+		// Memory: 11.59%
+
         // Base case
         if (nums.size() == 0) {
             return nullptr;
         }
 
+        // Recursively build tree
+        int i = findMax(0, nums.size(), nums);
+        vector<int> left = getSubVector(0, i, nums);
+        vector<int> right = getSubVector(i + 1, nums.size(), nums);
+        TreeNode* root = new TreeNode(
+            nums[i],
+            constructMaximumBinaryTree(left),
+            constructMaximumBinaryTree(right)
+        );
+
+        return root;
+    }
+
+    int findMax(int begin, int end, vector<int> nums) {
         // Find max
         int maxIndex = 0;
         int maxValue = nums[0];
-        for (int i = 0; i < nums.size(); i++) {
+        for (int i = begin; i < end; i++) {
             if (nums[i] > maxValue) {
                 maxValue = nums[i];
                 maxIndex = i;
             }
         }
 
-        // Recursively build tree
-        TreeNode* root = nullptr;
-        if (maxIndex != 0) {
-            if (nums.size() >= 3) {
-                root = new TreeNode(
-                    maxValue, 
-                    constructMaximumBinaryTree(vector<int>(nums.begin(), nums.begin() + maxIndex)),
-                    constructMaximumBinaryTree(vector<int>(nums.begin() + maxIndex + 1, nums.end()))
-                );
-            } else {
-                root = new TreeNode(
-                    maxValue, 
-                    constructMaximumBinaryTree(vector<int>(nums.begin(), nums.begin() + 1)),
-                    constructMaximumBinaryTree(vector<int>(nums.end(), nums.end()))
-                );
-            }
-        } else {
-            if (nums.size() == 1) {
-                root = new TreeNode(
-                    maxValue, 
-                    nullptr,
-                    constructMaximumBinaryTree(vector<int>(nums.begin(), nums.begin()))
-                );
-            } else {
-                root = new TreeNode(
-                    maxValue, 
-                    nullptr,
-                    constructMaximumBinaryTree(vector<int>(nums.begin() + 1, nums.end()))
-                );
-            }
+        return maxIndex;
+    }
+
+    vector<int> getSubVector(int begin, int end, vector<int> nums) {
+        vector<int> temp;
+        if (end - begin > nums.size()) {
+            temp.clear();
+            return temp;
         }
 
-        return root;
+        temp = vector<int>(nums.begin() + begin, nums.begin() + end);
+        return temp;
     }
 };
